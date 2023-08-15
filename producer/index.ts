@@ -1,4 +1,4 @@
-import { Kafka } from "kafkajs";
+import { Kafka, RecordMetadata } from "kafkajs";
 import { User } from "../types/User";
 import { v4 as uuid } from "uuid";
 
@@ -16,11 +16,15 @@ import { v4 as uuid } from "uuid";
     email: "email@email.com",
   };
 
-  await producer.connect();
-  await producer.send({
-    topic: "test-topic",
-    messages: [{ value: JSON.stringify(user) }],
-  });
+  setInterval(async () => {
+    await producer.connect();
 
-  await producer.disconnect();
+    const res: RecordMetadata[] = await producer.send({
+      topic: "test-topic",
+      messages: [{ value: JSON.stringify(user) }],
+    });
+
+    await producer.disconnect();
+    console.log("message sent succesfully");
+  }, 1000);
 })();

@@ -14,8 +14,15 @@ import { User } from "../types/User";
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      const user: User = JSON.parse(message.value?.toString() || "");
-      console.log(user);
+        try {
+        const user: User = JSON.parse(message.value?.toString() || "");
+        } catch(e) {
+            console.log(e);
+            
+        }
+        console.log({
+          value: message.value?.toString(),
+        });
     },
   });
 })();
